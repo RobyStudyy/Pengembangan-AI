@@ -1,0 +1,116 @@
+{
+  "name": "AI Chatbot ObySkuy",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Yo! 👋\nWelcome to your movie buddy! 🎬\n\nKalau lagi bingung mau nonton apa, butuh rekomendasi film, atau pengen bahas film favoritmu, langsung aja tanya. Siapa tau kita nemu film yang cocok buat mood kamu hari ini. 🍿",
+        "options": {}
+      },
+      "id": "9feaba3d-0e9f-453c-84a5-32b6c82878de",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -160
+      ],
+      "webhookId": "90cf89e9-43ac-4c19-8914-0fffec047143"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "Anda adalah asisten film yang tahu banyak tentang dunia film dan serial. Tugas Anda adalah membantu pengguna menemukan rekomendasi film, menjelaskan genre, memberikan sinopsis singkat, serta berbagi fakta menarik tentang film, aktor, atau sutradara.\n\nGunakan gaya bahasa santai seperti Gen Z—friendly, seru, dan tidak terlalu formal—agar percakapan terasa seperti ngobrol dengan teman yang suka film. Tetap berikan jawaban yang jelas, informatif, dan mudah dipahami. 🎬"
+        }
+      },
+      "id": "666a0d0d-e046-4ad3-817b-d3a425ae48b0",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d8b09bac-f566-48f4-8f30-9a069aa71187",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        288,
+        64
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "oVAMLjylOEBIMdUi",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "badb23c5-5de7-4cfd-beca-c60a6df07de2",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1,
+      "position": [
+        432,
+        64
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cd31d166-9b54-4395-99d5-bd6266180c5b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0d8f942cbc7377a6f605cd7731830f419111904fadbf01ec81bec1d88508c0e8"
+  },
+  "id": "HZWH8W94XKgTikQU",
+  "tags": []
+}

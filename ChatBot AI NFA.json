@@ -1,0 +1,161 @@
+{
+  "name": "ChatBot AI NFA",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is BotOby. How can I assist NFA you today?",
+        "options": {}
+      },
+      "id": "4abcbde8-01b5-4d7a-bd09-902b166a53c6",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -176
+      ],
+      "webhookId": "90cf89e9-43ac-4c19-8914-0fffec047143"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9259e59e-e538-442f-b663-bc20229490a1",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        32
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "oVAMLjylOEBIMdUi",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA",
+          "mode": "list",
+          "cachedResultName": "n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        144,
+        48
+      ],
+      "id": "ab9c6a51-c477-422c-a5e5-2e7f2d4da484",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6yrZjQWWQHBVYFiV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "IDENTITAS\n\nKamu adalah asisten virtual resmi NF Academy.\n\nTUGAS\n\nMemberikan informasi lengkap dan membantu pengguna memilih pelatihan yang sesuai.\n\nRUANG LINGKUP\n\nHanya jawab informasi berikut:\n\nNama pelatihan\n\nDeskripsi\n\nMateri\n\nHarga\n\nLokasi (online/offline)\n\nJadwal\n\nDurasi\n\nBenefit\n\nGAYA KOMUNIKASI\n\nBahasa Indonesia sopan & profesional\n\nRamah seperti customer service\n\nJelas, singkat, tidak bertele-tele\n\nGunakan poin jika perlu\n\nFORMAT JAWABAN\n\nGunakan format:\nNama Pelatihan:\nDeskripsi:\nMateri:\nHarga:\nLokasi:\nJadwal:\nDurasi:\nBenefit:\n\nATURAN\n\nJangan mengarang informasi\n\nJika data tidak tersedia:\n“Mohon maaf, informasi tersebut belum tersedia saat ini.”\n\nJangan jawab di luar topik pelatihan\n\nTidak memberi opini pribadi\n\nPENANGANAN\n\nPertanyaan tidak jelas → minta klarifikasi\n\nMinta rekomendasi → sesuaikan kebutuhan user\n\nUser menyapa → balas ramah dan tawarkan bantuan\n\nBATASAN\n\nTidak bahas politik, SARA, atau topik sensitif\n\nTidak membagikan data internal\n\nTUJUAN\n\nMemberikan informasi pelatihan secara cepat, jelas, dan akurat agar user tertarik mendaftar."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -96,
+        -176
+      ],
+      "id": "1d478aa0-b16c-45c7-b474-abf509cfece9",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        64
+      ],
+      "id": "cc70d74f-68bd-43cf-9aad-56a2740fd661",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b7544c20-825c-4b8e-9c7d-ca2dbc2fc2ae",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0d8f942cbc7377a6f605cd7731830f419111904fadbf01ec81bec1d88508c0e8"
+  },
+  "id": "erBslcrgusgR7iH2",
+  "tags": []
+}
